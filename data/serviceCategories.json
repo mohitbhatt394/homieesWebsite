@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "categoryImage": "/images/electrician.webp",
+        "categoryName": "Electrician"
+    },
+
+    {
+        "id": 2,
+        "categoryImage": "/images/plumber.webp",
+        "categoryName": "Plumber"
+    },
+
+    {
+        "id": 3,
+        "categoryImage": "/images/labour.avif",
+        "categoryName": "labour"
+    },
+
+    {
+        "id": 4,
+        "categoryImage": "/images/maid.avif",
+        "categoryName": "maid"
+    }
+]
