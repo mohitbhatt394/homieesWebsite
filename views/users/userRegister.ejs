@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create a new account to access our services"
+    />
+    <title>Sign Up | MyWebsite</title>
+    <link rel="stylesheet" href="/style/main.css" />
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <% if (success_msg) { %>
+      <div class="flash-message alert-success">
+        <%= success_msg %>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    <% } %>
+    
+    <% if (error_msg) { %>
+      <div class="flash-message alert-danger">
+        <%= error_msg %>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    <% } %>
+
+    
+
+
+    <main class="auth-page">
+      <div class="container">
+        <div class="auth-card">
+          <h1 class="auth-title">Create Your Account</h1>
+
+          <!-- Step 1: Registration Form -->
+          <form
+            id="registrationForm"
+            action="/user/register"
+            method="POST"
+            enctype="multipart/form-data"
+            class="auth-form"
+          >
+            <div class="form-group">
+              <label for="fullname" class="form-label">Full Name</label>
+              <input
+                type="text"
+                id="fullname"
+                name="fullname"
+                required
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="picture" class="form-label">Profile Picture</label>
+              <input
+                type="file"
+                id="picture"
+                name="picture"
+                accept="image/*"
+                class="form-input"
+              />
+            </div>
+
+            <button type="submit" id="sendOtpBtn" class="btn primary-btn">
+              Send OTP
+            </button>
+          </form>
+
+          <!-- Step 2: OTP Verification (initially hidden) -->
+          <div id="otpVerification" style="display: none">
+            <h2>Verify Your Email</h2>
+            <p>Enter the 6-digit OTP sent to <span id="otpEmail"></span></p>
+
+            <div class="form-group">
+              <input
+                type="text"
+                id="otp"
+                name="otp"
+                maxlength="6"
+                pattern="\d{6}"
+                class="form-input"
+                placeholder="123456"
+              />
+            </div>
+
+            <button type="button" id="verifyOtpBtn" class="btn primary-btn">
+              Verify & Register
+            </button>
+            <button type="button" id="resendOtpBtn" class="btn secondary-btn">
+              Resend OTP
+            </button>
+          </div>
+
+          <div class="auth-footer">
+            <p>
+              Already have an account?
+              <a href="/user/login" class="auth-link">Log in</a>
+            </p>
+          </div>
+        </div>
+        
+      </div>
+
+      
+    </main>
+
+    <script src="/javascripts/generateOtp.js"></script>
+    <script>
+      setTimeout(() => {
+        document.querySelectorAll('.flash-message').forEach(msg => {
+          msg.style.opacity = '0';
+          setTimeout(() => msg.remove(), 300); // Remove after fade out
+        });
+      }, 5000);
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,13 @@
+  /* ======================
+     PROVIDER REGISTRATION (providerRegistration.ejs)
+     ====================== */
+     .provider-registration-page {
+        padding: var(--space-xl) 0;
+      }
+      
+      .registration-card {
+        background-color: var(--bg-color);
+        border-radius: var(--border-radius-lg);
+        padding: var(--space-xl);
+        box-shadow: var(--shadow-sm);
+      }

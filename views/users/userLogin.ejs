@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to your account to access personalized services">
+  <title>Login | MyWebsite</title>
+  <link rel="stylesheet" href="/style/main.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <% if (success_msg) { %>
+    <div class="flash-message alert-success">
+      <%= success_msg %>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+  <% } %>
+  
+  <% if (error_msg) { %>
+    <div class="flash-message alert-danger">
+      <%= error_msg %>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+  <% } %>
+
+  <main class="auth-page">
+    <div class="container">
+      <div class="auth-card">
+        <h1 class="auth-title">Login to Your Account</h1>
+        
+        <form action="/user/login" method="POST" class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" required 
+                   class="form-input" autocomplete="email">
+          </div>
+          
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" required 
+                   class="form-input" autocomplete="current-password">
+          </div>
+          
+          <button type="submit" class="btn primary-btn" id="loginBtn">Login</button>
+        </form>
+        
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="/user/register" class="auth-link">Sign up here</a></p>
+          <p><a href="/user/forgot-password" class="auth-link">Forgot password?</a></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/javascripts/userLogin.js"></script>
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.flash-message').forEach(msg => {
+        msg.style.opacity = '0';
+        setTimeout(() => msg.remove(), 300); // Remove after fade out
+      });
+    }, 5000);
+  </script>
+</body>
+</html>

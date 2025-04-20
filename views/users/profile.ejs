@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Manage your profile and account settings"
+    />
+    <title>Profile Settings | MyWebsite</title>
+    <link rel="stylesheet" href="/style/main.css" />
+    <link rel="stylesheet" href="/style/profile.css" />
+
+    <style>
+      .logout-btn{
+    background-color: rgb(204, 64, 64);
+    color: white;
+    font-weight: bold;
+      }
+
+      .logout-btn:hover {
+        background-color: rgb(153, 51, 51);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('../partials/navbar') %>
+
+
+    <% if (success_msg) { %>
+      <div class="flash-message alert-success">
+        <%= success_msg %>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    <% } %>
+    
+    <% if (error_msg) { %>
+      <div class="flash-message alert-danger">
+        <%= error_msg %>
+        <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    <% } %>
+    
+
+    <main class="profile-page">
+      <div class="container">
+        <h1 class="page-title">Profile Settings</h1>
+
+        <div class="profile-card">
+          <section class="profile-section">
+            <h2 class="section-title visually-hidden">Profile Information</h2>
+            <div class="profile-header">
+              <div class="avatar-container">
+                <img src="<%= user.picture %>" alt="profile" class="profile-avatar">
+              </div>
+              <h3 class="user-name"><%= user.fullname %></h3>
+              <div>
+                <a href="/user/profile/recent-providers">Recently Contacted providers</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <h2 class="section-title">Update Profile</h2>
+            <form
+              action="/user/profile/update"
+              method="POST"
+              enctype="multipart/form-data"
+              class="profile-form"
+              id="userProfileUpdate"
+            >
+              <div class="form-group">
+                <label for="picture" class="form-label">Profile Picture</label>
+                <input
+                  type="file"
+                  id="picture"
+                  name="picture"
+                  accept="image/*"
+                  class="form-input"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="fullname" class="form-label">Full Name</label>
+                <input
+                  type="text"
+                  id="fullname"
+                  name="fullname"
+                  value="<%= user.fullname %>"
+                  required
+                  class="form-input"
+                />
+              </div>
+
+             
+
+              <button type="submit" class="btn primary-btn" id="userProfileUpdateBtn">
+                Save Changes
+              </button>
+            </form>
+
+  
+            
+          </section>
+
+          <section class="form-section">
+            <h2 class="section-title" style="margin-top: 2rem;">Change Password</h2>
+            <form action="/user/update-password" method="POST" class="profile-form">
+              <div class="form-group">
+                <label for="currentPassword" class="form-label"
+                  >Current Password</label
+                >
+                <input
+                  type="password"
+                  id="currentPassword"
+                  name="currentPassword"
+                  required
+                  class="form-input"
+                  autocomplete="current-password"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  required
+                  class="form-input"
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <button type="submit" class="btn primary-btn">
+                Update Password
+              </button>
+            </form>
+          </section>
+
+          
+          <div class="logout-section">
+            <a href="/user/logout" class="btn logout-btn">Logout</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+   
+    <script>
+      setTimeout(() => {
+        document.querySelectorAll('.flash-message').forEach(msg => {
+          msg.style.opacity = '0';
+          setTimeout(() => msg.remove(), 300); // Remove after fade out
+        });
+      }, 5000);
+    </script>
+    <script src="/javascripts/userProfileUpdate.js"></script>
+    
+  </body>
+</html>

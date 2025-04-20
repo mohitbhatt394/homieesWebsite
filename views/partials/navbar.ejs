@@ -1,0 +1,30 @@
+<header class="site-header">
+  <nav class="navbar container">
+    <a href="/" class="brand-logo" aria-label="Home">Homiees</a>
+
+    <div class="nav-menu">
+      <% if (user && user.role === "admin") { %>
+        <a href="/admin/dashboard" class="nav-link">Admin Dashboard</a>
+      <% } %>
+      
+      <a href="/" class="nav-link">Home</a>
+      <a href="/provider/register" class="nav-link service-link">Become Provider</a>
+
+      <% if (user) { %>
+        <div>
+
+        </div>
+        <div class="userProfile">
+          <a href="/user/profile">
+            <img src="<%= user.picture %>" alt="profile" />
+          </a>
+        </div>
+      <% } else { %>
+        <div class="auth-buttons">
+    
+          <a href="/user/register" class="btn signup-btn">Sign Up</a>
+        </div>
+      <% } %>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <!-- <link rel="stylesheet" href="/style/main.css"> -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 15px 0;
+    }
+
+    nav button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    nav button:hover {
+      background-color: #0056b3;
+    }
+
+    section {
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .table-section {
+      display: none;
+    }
+
+    .table-section.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      th, td {
+        padding: 10px;
+      }
+
+      nav button {
+        width: 80%;
+      }
+    }
+
+    /* .nav-link {
+      text-decoration: none;
+      color: #007bff;
+      font-size: 18px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    } */
+  </style>
+  
+</head>
+<body>
+  <% if (success_msg) { %>
+    <div class="flash-message alert-success">
+      <%= success_msg %>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+  <% } %>
+  
+  <% if (error_msg) { %>
+    <div class="flash-message alert-danger">
+      <%= error_msg %>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+  <% } %>
+
+  <header>
+    <h1>Admin Dashboard</h1>
+  </header>
+
+  <nav>
+    <a href="/" class="nav-link">Home</a>
+    <button onclick="showSection('users')">Users</button>
+    <button onclick="showSection('providers')">Providers</button>
+  </nav>
+
+  <section>
+    <!-- USERS SECTION -->
+    <div id="users" class="table-section active">
+      <h2>Registered Users</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Replace with dynamic content -->
+          <% users.forEach(user => { %>
+            <tr>
+              <td><%= user.fullname %></td>
+              <td><%= user.email %></td>
+              <td><form method="POST" action="/admin/delete-user/<%= user._id %>">
+                <button class="delete-btn">Delete</button>
+              </form></td>
+            </tr>
+          <% }) %>
+          
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PROVIDERS SECTION -->
+    <div id="providers" class="table-section">
+      <h2>Service Providers</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Provider Name</th>
+            <th>Email</th>
+            <th>Service</th>
+            <th>rating / 5</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Replace with dynamic content -->
+          <% providers.forEach(provider => { %>
+            <tr>
+              <td><%= provider.providerName %></td>
+              <td><%= provider.phoneNumber %></td>
+              <td><%= provider.category %></td>
+              <td><%= provider.averageRating %> </td>
+              <td><form method="POST" action="/admin/delete-provider/<%= provider._id %>">
+                <button class="delete-btn">Delete</button>
+              </form></td>
+            </tr>
+          <% }) %>
+          
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    function showSection(sectionId) {
+      document.querySelectorAll('.table-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    
+      setTimeout(() => {
+        document.querySelectorAll('.flash-message').forEach(msg => {
+          msg.style.opacity = '0';
+          setTimeout(() => msg.remove(), 300); // Remove after fade out
+        });
+      }, 5000);
+  </script>
+</body>
+</html>

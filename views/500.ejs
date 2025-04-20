@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>500 - Server Error</title>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+      color: #333;
+      text-align: center;
+      padding: 60px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 4em;
+      color: #dc3545;
+    }
+    p {
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+    pre {
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: left;
+      overflow-x: auto;
+      margin-top: 30px;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+      margin-top: 30px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>500</h1>
+    <p><strong><%= message || 'Internal Server Error' %></strong></p>
+
+    <% if (error) { %>
+      <pre><%= error %></pre>
+    <% } else { %>
+      <p>We're working to fix this issue. Please try again later.</p>
+    <% } %>
+
+    <a href="/">← Back to Home</a>
+  </div>
+</body>
+</html>

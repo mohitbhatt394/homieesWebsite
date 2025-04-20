@@ -1,0 +1,197 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h2>Recently Contacted Providers</h2>
+<div class="recent-providers">
+  <% recentProviders.forEach(provider => { %>
+    <div class="provider-card">
+      <p><strong><%= provider.providerName %></strong></p>
+      <p><%= provider.address.area %>, <%= provider.address.district %></p>
+      <a href="tel:<%= provider.phoneNumber %>" class="small-call-btn">Call Again</a>
+    </div>
+  <% }) %>
+</div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Find and connect with local service providers">
+  <title>Service Providers | MyWebsite</title>
+  <link rel="stylesheet" href="/style/main.css">
+  <link rel="stylesheet" href="/style/serviceProvider.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <% if (success_msg) { %>
+    <div class="flash-message alert-success">
+      <%= success_msg %>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+  <% } %>
+  
+  <% if (error_msg) { %>
+    <div class="flash-message alert-danger">
+      <%= error_msg %>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+  <% } %>
+
+  <main class="service-providers-page">
+    <div class="container">
+
+    
+      <div class="providers-grid">
+        <% recentProviders.forEach((provider) => { %>
+          <article class="provider-card" data-provider-id="<%= provider._id %>">
+
+            <img src="<%=provider.picture%>" 
+                 alt="<%= provider.providerName || 'Service Provider' %>" 
+                 class="provider-image" 
+                 loading="lazy"
+                 width="300"
+                 height="200">
+            
+            <div class="provider-details">
+              <h2 class="provider-name"><%= provider.providerName %></h2>
+              
+              <div class="provider-meta">
+                <p class="provider-location">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <%= provider.address.area %>, <%= provider.address.district %>, <%=provider.address.state%>, <%=provider.address.zipCode%>
+                </p>
+                <p class="provider-category">
+                  <i class="fas fa-tag"></i>
+                  <%= provider.category %>
+                </p>
+              </div>
+              
+              <div class="provider-rating">
+                <div class="stars" aria-label="Rating: 3 out of 5 stars">
+                  <% for(let i = 1; i <= 5; i++) { %>
+                    <% if (i <= Math.floor(provider.averageRating)) { %> 
+                      <i class="fas fa-star"></i> <!-- Full star -->
+                  <% } else if (i === Math.ceil(provider.averageRating) && provider.averageRating % 1 !== 0) { %>
+                      <i class="fas fa-star-half-alt"></i> <!-- Half star -->
+                  <% } else { %>
+                      <i class="far fa-star"></i> <!-- Empty star -->
+                  <% } %>
+                  <% } %>
+                  <span class="rating-text"><%=provider.averageRating.toFixed(1)%></span>
+                </div>
+                <button class="reviews-toggle">See Reviews</button>
+              </div>
+              
+              <!-- <div class="provider-actions">
+                <a href="tel:<%= provider.phoneNumber %>" class="action-button call-button">
+                  <i class="fas fa-phone"></i> Call Now
+                </a> -->
+                <div class="provider-actions">
+                  <button  class="btn call-button" data-provider-id="<%= provider._id %>" data-phone="<%= provider.phoneNumber %>">
+                    <i class="fas fa-phone"></i> Call Again
+                  </button>
+                
+                
+                
+                  <button class="action-button review-button">Leave Review</button>
+                  </div>
+                
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+      
+      
+      
+    </div>
+  </main>
+
+  <!-- Review Modals -->
+  <div class="modal-overlay" id="reviewsModal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close modal">&times;</button>
+      <h2 class="modal-title">Customer Reviews</h2>
+      <div class="reviews-container">
+        <!-- Reviews will be loaded here dynamically -->
+         
+      </div>
+    </div>
+  </div>
+
+
+<!-- Review Form Modal -->
+<div class="modal-overlay" id="reviewFormModal" aria-hidden="true">
+  <div class="modal-content">
+    <button class="modal-close" aria-label="Close modal">&times;</button>
+    <h2 class="modal-title">Write a Review</h2>
+    
+    <form class="review-form" method="post" action="/provider" id="reviewForm">
+      <!-- Hidden input to store provider ID -->
+      <input type="hidden" name="providerId" id="reviewProviderId">
+
+      <div class="rating-input">
+        <span class="rating-label">Your Rating:</span>
+        <div class="star-rating">
+          <% for(let i = 1; i <= 5; i++) { %>
+            <i class="far fa-star" data-rating="<%= i %>"></i>
+          <% } %>
+        </div>
+      </div>
+
+      <textarea name="reviewMessage" class="review-textarea" placeholder="Share your experience..."></textarea>
+      <button type="submit" class="submit-review">Submit Review</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+  <script src="../../javascripts/model.js"></script>
+ 
+  
+  <script>
+    document.querySelectorAll('.call-button').forEach(button => {
+      button.addEventListener('click', async (e) => {
+        const providerId = button.getAttribute('data-provider-id');
+        const phone = button.getAttribute('data-phone');
+  
+        try {
+          await fetch('/user/call-log', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ providerId })
+          });
+  
+          // Then initiate the call
+          window.location.href = `tel:${phone}`;
+        } catch (err) {
+          console.error('Failed to log call:', err);
+        }
+      });
+    });
+
+
+    setTimeout(() => {
+      document.querySelectorAll('.flash-message').forEach(msg => {
+        msg.style.opacity = '0';
+        setTimeout(() => msg.remove(), 300); // Remove after fade out
+      });
+    }, 5000);
+  </script>
+</body>
+</html>

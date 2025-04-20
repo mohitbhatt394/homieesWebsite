@@ -1,0 +1,56 @@
+/* ======================
+     FOOTER (partials/footer.ejs)
+     ====================== */
+     .site-footer {
+        background-color: var(--dark-color);
+        color: white;
+        padding: var(--space-xl) 0 var(--space-md);
+        margin-top: auto;
+      }
+      
+      .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-md);
+        margin-bottom: var(--space-md);
+      }
+      
+      .footer-nav {
+        width: 100%;
+      }
+      
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-md);
+      }
+      
+      .social-links a {
+        color: white;
+        font-size: var(--text-lg);
+      }
+      
+      .social-links a:hover {
+        color: var(--primary-color);
+      }
+      
+      .legal-links {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-md);
+      }
+      
+      .legal-links a {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .legal-links a:hover {
+        color: white;
+      }
+      
+      .copyright {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: var(--text-sm);
+      }
+      

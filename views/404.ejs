@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found | MyWebsite</title>
+  <style>
+    /* Inherit your main.css styles + 404-specific adjustments */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .container {
+      /* flex: 1; */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .error-content {
+      max-width: 600px;
+      padding: 2rem;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .error-code {
+      font-size: 5rem;
+      font-weight: 700;
+      color: #dc3545;
+      margin: 0;
+      line-height: 1;
+    }
+    
+    .error-message {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      color: #343a40;
+    }
+    
+    .error-description {
+      color: #6c757d;
+      margin-bottom: 2rem;
+    }
+    
+    .home-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    
+    .home-btn:hover {
+      background-color: #0056b3;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .error-content {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  
+
+  <div class="container">
+    <div class="error-content">
+      <h1 class="error-code">404</h1>
+      <h2 class="error-message">Page Not Found</h2>
+      <p class="error-description">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <a href="/" class="home-btn">
+        <i class="fas fa-home"></i> Return Home
+      </a>
+    </div>
+  </div>
+
+  <!-- Font Awesome for the home icon -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.flash-message').forEach(msg => {
+        msg.style.opacity = '0';
+        setTimeout(() => msg.remove(), 300); // Remove after fade out
+      });
+    }, 5000);
+  </script>
+</body>
+</html>
