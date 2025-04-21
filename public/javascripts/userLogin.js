@@ -15,17 +15,17 @@ function showFlash(message, type = "success") {
 }
 
 // User profile update form submission
-document.getElementById("userProfileUpdate").addEventListener("submit", async function (e) {
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
   e.preventDefault();
   const form = this;
-  const registerBtn = document.getElementById("userProfileUpdateBtn");
-  registerBtn.textContent = "Updating...";
+  const registerBtn = document.getElementById("loginBtn");
+  registerBtn.textContent = "Logging...";
   registerBtn.disabled = true;
 
   const formData = new FormData(form);
 
   try {
-    const response = await fetch("/user/profile/update", {
+    const response = await fetch("/user/login", {
       method: "POST",
       body: formData,
       headers: {
@@ -36,20 +36,17 @@ document.getElementById("userProfileUpdate").addEventListener("submit", async fu
     const result = await response.json();
 
     if (response.ok && result.success) {
-      showFlash(result.message || "User profile updated successfully", "success");
+      showFlash(result.message || "Logged in successful", "success");
 
       // Wait for 1.5 seconds before redirecting
       setTimeout(() => {
-        window.location.href = "/user/profile";
+        window.location.href = "/";
       }, 1500);
     } else {
-      showFlash(result.message || "Update failed", "error");
+      showFlash(result.message || "logged in failed", "error");
     }
   } catch (error) {
     console.error("Update Error:", error);
     showFlash(error.message || "Something went wrong. Please try again.", "error");
-  } finally {
-    registerBtn.textContent = "Save Changes";
-    registerBtn.disabled = false;
-  }
+  } 
 });
