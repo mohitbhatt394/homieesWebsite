@@ -22,15 +22,20 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   registerBtn.textContent = "Logging...";
   registerBtn.disabled = true;
 
-  const formData = new FormData(form);
+  const data = {
+    email: form.email.value,
+    password: form.password.value,
+  };
+  
 
   try {
     const response = await fetch("/user/login", {
       method: "POST",
-      body: formData,
       headers: {
-        'Accept': 'application/json'
-      }
+        "Content-Type": "application/json",
+      "Accept": "application/json"
+      },
+      body: JSON.stringify(data)
     });
 
     const result = await response.json();
@@ -44,9 +49,18 @@ document.getElementById("loginForm").addEventListener("submit", async function (
       }, 1500);
     } else {
       showFlash(result.message || "logged in failed", "error");
+
+      // 🔧 Re-enable the button on error
+      registerBtn.textContent = "Login";
+      registerBtn.disabled = false;
     }
   } catch (error) {
     console.error("Update Error:", error);
     showFlash(error.message || "Something went wrong. Please try again.", "error");
+
+     // 🔧 Re-enable the button on catch error
+     registerBtn.textContent = "Login";
+     registerBtn.disabled = false;
   } 
 });
+
