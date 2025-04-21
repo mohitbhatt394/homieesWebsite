@@ -1,33 +1,37 @@
 
 
-// Unified flash message function (single declaration)
+const flashContainer = document.getElementById("flashContainer");
+
 function showFlash(message, type = "success") {
-  // Remove any existing flash messages first
-  document.querySelectorAll('.flash-message').forEach(el => el.remove());
-  
-  const flash = document.createElement("div");
-  flash.className = `flash-message ${type === "success" ? "alert-success" : "alert-danger"}`;
-  flash.innerHTML = `
-    <span>${message}</span>
-    <button class="close-btn" onclick="this.parentElement.remove();">&times;</button>
+  const flashContainer = document.createElement("div");
+  flashContainer.classList.add("flash-message", type === "success" ? "alert-success" : "alert-danger");
+  flashContainer.innerHTML = `
+      <span>${message}</span>
+      <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
   `;
+  
+  document.body.appendChild(flashContainer);
 
-
-  // Auto-remove after delay
   setTimeout(() => {
-    flash.style.opacity = "0";
-    setTimeout(() => flash.remove(), 500);
-  }, 5000);
+      flashContainer.style.opacity = "0";
+      setTimeout(() => flashContainer.remove(), 500);
+  }, 4000);
 }
 
-// Registration Form Handler
-document.getElementById("registrationForm")?.addEventListener("submit", async function(event) {
+// ADD THIS DEBUG LINE RIGHT HERE:
+console.log("Send OTP button exists:", !!document.getElementById("sendOtpBtn"));
+
+// Then continue with the rest of your code:
+function debug(message) {
+  console.log("[DEBUG]", message);
+  showFlash(message, "success");
+}
+
+document.getElementById("registrationForm").addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const formData = new FormData(this);
   const sendBtn = document.getElementById("sendOtpBtn");
-  const originalBtnText = sendBtn.textContent;
-  
   sendBtn.textContent = "Sending OTP...";
   sendBtn.disabled = true;
 
@@ -45,111 +49,79 @@ document.getElementById("registrationForm")?.addEventListener("submit", async fu
       document.getElementById("otpEmail").textContent = formData.get("email");
       document.getElementById("registrationForm").style.display = "none";
     } else {
-      throw new Error(result.message || "Failed to send OTP");
+      showFlash(result.message || "Something went wrong.", "error");
+      sendBtn.textContent = "Send OTP";
+      sendBtn.disabled = false;
     }
   } catch (error) {
     console.error("Error:", error);
-    showFlash(error.message || "Something went wrong. Please try again.", "error");
-  } finally {
-    sendBtn.textContent = originalBtnText;
+    showFlash("Something went wrong. Please try again.", "error");
+    sendBtn.textContent = "Send OTP";
     sendBtn.disabled = false;
   }
 });
 
-// OTP Verification Handler
-document.getElementById("verifyOtpBtn")?.addEventListener("click", async function() {
-  const otp = document.getElementById("otp").value.trim();
-  const email = document.getElementById("otpEmail").textContent.trim();
-  const verifyBtn = this;
-  const originalBtnText = verifyBtn.textContent;
+document.getElementById("verifyOtpBtn").addEventListener("click", async function () {
+  const otp = document.getElementById("otp").value;
+  const email = document.getElementById("otpEmail").textContent; // Get email from the displayed text
   
-  // Validation
-  if (!otp || !email) {
-    showFlash("Please enter OTP and ensure email is correct", "error");
-    return;
-  }
-
+  const verifyBtn = this;
   verifyBtn.textContent = "Verifying...";
   verifyBtn.disabled = true;
 
   try {
     const response = await fetch("/user/verify-otp", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({ otp, email }),
-      credentials: "include"
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ otp, email }), // Include both OTP and email
     });
 
     const result = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(result.message || "Verification failed");
-    }
 
-    showFlash("Registration successful! Redirecting...", "success");
-    setTimeout(() => {
-      window.location.href = result.redirectUrl || "/";
-    }, 2000);
-    
+    if (result.success) {
+      showFlash("Registration successful! Redirecting...", "success");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } else {
+      showFlash(result.message || "Invalid OTP.", "error");
+      verifyBtn.textContent = "Verify OTP";
+      verifyBtn.disabled = false;
+    }
   } catch (error) {
-    console.error("Verification error:", error);
-    showFlash(error.message || "Invalid OTP. Please try again.", "error");
-  } finally {
-    verifyBtn.textContent = originalBtnText;
+    console.error("Error:", error);
+    showFlash("Something went wrong. Please try again.", "error");
+    verifyBtn.textContent = "Verify OTP";
     verifyBtn.disabled = false;
   }
 });
 
-// Resend OTP Handler (THIS IS THE MISSING PART)
-document.getElementById("resendOtpBtn")?.addEventListener("click", async function() {
+document.getElementById("resendOtpBtn").addEventListener("click", async function () {
   const resendBtn = this;
-  const email = document.getElementById("otpEmail").textContent.trim();
-  const originalBtnText = resendBtn.textContent;
+  const email = document.getElementById("otpEmail").textContent;
   
-  if (!email) {
-    showFlash("No email found for OTP resend", "error");
-    return;
-  }
-
   resendBtn.textContent = "Resending...";
   resendBtn.disabled = true;
 
   try {
     const response = await fetch("/user/resend-otp", {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({ email })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
     });
 
     const result = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(result.message || "Failed to resend OTP");
-    }
 
-    showFlash("New OTP has been sent to your email", "success");
-    
+    if (result.success) {
+      showFlash("New OTP has been sent to your email.", "success");
+    } else {
+      showFlash(result.message || "Failed to resend OTP.", "error");
+    }
   } catch (error) {
-    console.error("Resend error:", error);
-    showFlash(error.message || "Failed to resend OTP. Please try again.", "error");
+    console.error("Error:", error);
+    showFlash("Failed to resend OTP. Please try again.", "error");
   } finally {
-    resendBtn.textContent = originalBtnText;
+    resendBtn.textContent = "Resend OTP";
     resendBtn.disabled = false;
   }
-});
-
-// Auto-remove server-side flash messages
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    document.querySelectorAll('.flash-message').forEach(msg => {
-      msg.style.opacity = '0';
-      setTimeout(() => msg.remove(), 300);
-    });
-  }, 5000);
 });
